@@ -66,17 +66,18 @@
 
 // getCurrentTabUrl();
 
-function intervalTime(mins) {
+function intervalTime(mins, callback) {
   var msecPerMinute = 1000 * 60;
 
   var startTime = new Date().getTime();
   var minutes = mins * msecPerMinute;
   var endTime = startTime + minutes;
 
+  callback();
   var myInterval = setInterval(function() {
     if (new Date().getTime() > endTime) {
-       console.log("now ready");
-       clearInterval(myInterval);
+      console.log("now ready");
+      clearInterval(myInterval);
     } else {
       console.log("not yet function");
     }
@@ -84,21 +85,27 @@ function intervalTime(mins) {
 }
 
 
+function injectScript() {
+  console.log("Inject Script accessed");
+}
 
-chrome.tabs.onUpdated.addListener(function() {
-  chrome.tabs.query({lastFocusedWindow: true}, function(tabs){
-    var currentTab = tabs[tabs.length - 1];
-    var currentTabURL = currentTab.url;
-    if (currentTabURL.search("facebook") > -1) {
-      console.log(currentTabURL);
-      console.log("danger url! beware!");
-      intervalTime(.25);
-    } else {
-      console.log(currentTabURL);
-      console.log("this url is okey dokey");
-    }
-  });
+
+chrome.tabs.onUpdated.addListener(function(tabID, info) {
+  if (info.status == "complete") {
+    chrome.tabs.query({lastFocusedWindow: true}, function(tabs){
+      var currentTab = tabs[tabs.length - 1];
+      var currentTabURL = currentTab.url;
+      if (currentTabURL.search("facebook") > -1) {
+        console.log(currentTabURL);
+        console.log("Match for Facebook!");
+        intervalTime(.25, injectScript);
+      } else {
+        console.log(currentTabURL);
+      }
+    });
+  }  
 });
+
 
 // /**
 //  * @param {string} searchTerm - Search term for Google Image search.
