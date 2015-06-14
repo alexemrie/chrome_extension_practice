@@ -91,9 +91,9 @@ function intervalTime(mins, callback) {
 function injectScript(tabID) {
   console.log("Inject Script accessed");
   // chrome.tabs.executeScript(null, {file: "script.js"});
-  chrome.tabs.executeScript(tabID, {
-    code: 'document.body.style.backgroundColor="red"'
-  });
+  // chrome.tabs.executeScript(tabID, {
+  //   code: 'document.body.style.backgroundColor="red"'
+  // });
 }
 
 chrome.webNavigation.onDOMContentLoaded.addListener(function(info) {
@@ -101,12 +101,13 @@ chrome.webNavigation.onDOMContentLoaded.addListener(function(info) {
   chrome.tabs.query({lastFocusedWindow: true}, function(tabs) {
     var currentTab = tabs[tabs.length - 1];
     console.log(currentTab.id);
-    intervalTime(.25, injectScript(currentTab.id));
+    chrome.tabs.sendMessage(currentTab.id, {"message": "visited monitored url"});
+    // intervalTime(.25, injectScript(currentTab.id));
     // chrome.tabs.executeScript(currentTab.id, {
     //   code: 'document.body.style.backgroundColor="red"'
     // });
   });
-}, {url: [{hostContains : 'youtube'}, {hostContains : 'facebook'}]});
+}, {url: [{hostContains : 'youtube'}, {hostContains : 'facebook'}, {hostContains : 'twitter'}]});
 
 
 
