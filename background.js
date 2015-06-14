@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// "default_popup": "popup.html"
+
 
 /**
  * Get the current URL.
@@ -65,6 +67,7 @@
 // }
 
 // getCurrentTabUrl();
+console.log("hello i am part of the extension");
 
 function intervalTime(mins, callback) {
   var msecPerMinute = 1000 * 60;
@@ -85,26 +88,44 @@ function intervalTime(mins, callback) {
 }
 
 
-function injectScript() {
+function injectScript(tabID) {
   console.log("Inject Script accessed");
+  // chrome.tabs.executeScript(null, {file: "script.js"});
+  chrome.tabs.executeScript(tabID, {
+    code: 'document.body.style.backgroundColor="red"'
+  });
 }
 
+chrome.webNavigation.onDOMContentLoaded.addListener(function(info) {
+  console.log("URL is: " + info.url);
+  chrome.tabs.query({lastFocusedWindow: true}, function(tabs) {
+    var currentTab = tabs[tabs.length - 1];
+    console.log(currentTab.id);
+    intervalTime(.25, injectScript(currentTab.id));
+    // chrome.tabs.executeScript(currentTab.id, {
+    //   code: 'document.body.style.backgroundColor="red"'
+    // });
+  });
+}, {url: [{hostContains : 'youtube'}, {hostContains : 'facebook'}]});
 
-chrome.tabs.onUpdated.addListener(function(tabID, info) {
-  if (info.status == "complete") {
-    chrome.tabs.query({lastFocusedWindow: true}, function(tabs){
-      var currentTab = tabs[tabs.length - 1];
-      var currentTabURL = currentTab.url;
-      if (currentTabURL.search("facebook") > -1) {
-        console.log(currentTabURL);
-        console.log("Match for Facebook!");
-        intervalTime(.25, injectScript);
-      } else {
-        console.log(currentTabURL);
-      }
-    });
-  }  
-});
+
+
+
+// chrome.tabs.onUpdated.addListener(function(tabID, info) {
+//   if (info.status == "complete") {
+//     chrome.tabs.query({lastFocusedWindow: true}, function(tabs){
+//       var currentTab = tabs[tabs.length - 1];
+//       var currentTabURL = currentTab.url;
+//       if (currentTabURL.search("facebook") > -1) {
+//         console.log(currentTabURL);
+//         console.log("Match for Facebook!");
+//         intervalTime(.25, injectScript(tabID));
+//       } else {
+//         console.log(currentTabURL);
+//       }
+//     });
+//   }
+// });
 
 
 // /**
