@@ -96,18 +96,21 @@ function injectScript(tabID) {
   // });
 }
 
-chrome.webNavigation.onDOMContentLoaded.addListener(function(info) {
+chrome.webNavigation.onCompleted.addListener(function(info) {
   console.log("URL is: " + info.url);
   chrome.tabs.query({lastFocusedWindow: true}, function(tabs) {
     var currentTab = tabs[tabs.length - 1];
-    console.log(currentTab.id);
-    chrome.tabs.sendMessage(currentTab.id, {"message": "visited monitored url"});
+    var currentTabURL = currentTab.url;
+    console.log("Current tab url is: " + currentTabURL);
+    if (currentTabURL.search("reddit") || currentTabURL.search("facebook") || currentTabURL.search("twitter")> -1) {
+      chrome.tabs.sendMessage(currentTab.id, {"message": "visited monitored url"});  
+    }
     // intervalTime(.25, injectScript(currentTab.id));
     // chrome.tabs.executeScript(currentTab.id, {
     //   code: 'document.body.style.backgroundColor="red"'
     // });
   });
-}, {url: [{hostContains : 'youtube'}, {hostContains : 'facebook'}, {hostContains : 'twitter'}]});
+}, {url: [{hostContains : 'www.reddit.com'}, {hostContains : 'www.facebook.com'}, {hostContains : 'twitter.com'}]});
 
 
 
