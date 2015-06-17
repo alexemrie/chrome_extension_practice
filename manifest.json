@@ -20,6 +20,8 @@
     "webNavigation",
     "https://ajax.googleapis.com/",
     "storage",
+    "webRequest",
+    "webRequestBlocking",
     "tabs"
   ]
 }

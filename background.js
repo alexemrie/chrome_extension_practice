@@ -103,16 +103,18 @@ chrome.webNavigation.onCompleted.addListener(function(info) {
     var currentTabURL = currentTab.url;
     console.log("Current tab url is: " + currentTabURL);
     if (currentTabURL.search("reddit") || currentTabURL.search("facebook") || currentTabURL.search("twitter")> -1) {
-      chrome.tabs.sendMessage(currentTab.id, {"message": "visited monitored url"});  
+      chrome.tabs.sendMessage(currentTab.id, {"message": "visited monitored url"});
     }
-    // intervalTime(.25, injectScript(currentTab.id));
-    // chrome.tabs.executeScript(currentTab.id, {
-    //   code: 'document.body.style.backgroundColor="red"'
-    // });
   });
 }, {url: [{hostContains : 'www.reddit.com'}, {hostContains : 'www.facebook.com'}, {hostContains : 'twitter.com'}]});
 
-
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    if (request.blockHTML == "Block This Page") {
+      sendResponse({success: "Page was successfully blocked"});
+      chrome.tabs.update(sender.tab.id, {url: chrome.extension.getURL("block.html")});
+    }
+});
 
 
 // chrome.tabs.onUpdated.addListener(function(tabID, info) {

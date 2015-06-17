@@ -24,38 +24,49 @@ chrome.runtime.onMessage.addListener(
         return false;
       }
 
+      function addClock(timeRemaining) {
+        $('.your-clock').FlipClock(timeRemaining, {
+          countdown: true,
+          clockFace: 'MinuteCounter'
+        });
+      }
 
       chrome.storage.local.get(null, function(obj) {
-        var start_time = (new Date().getTime())/1000;
-        var end_time = start_time + 300;
-        if (hasKey(obj, 'end_time')) {
-          if (obj['end_time'] < start_time) {
-            console.log("Past prior deadline");
-            chrome.storage.local.remove('end_time');
+        var startTime = (new Date().getTime())/1000;
+        var breakTime = 15
+        var endTime = startTime + breakTime;
+        var studyTime = 20;
+        if (hasKey(obj, 'endTime')) {
+          if (obj['endTime'] < startTime) {
+            if ((obj['endTime'] + studyTime) > startTime) {
+              console.log("Need to render block html page");
+              chrome.runtime.sendMessage({blockHTML: "Block This Page"}, function(response) {
+                console.log(response.success);
+              });
+            } else {
+              console.log("Removing end time object and starting new timer")
+              chrome.storage.local.remove('endTime');
+              setObject('endTime', endTime);
+              addClock(breakTime);
+            }
           } else {
             console.log("still active");
-            var timeRemaining = obj['end_time'] - start_time;
-            var clock = $('.your-clock').FlipClock(timeRemaining, {
-              countdown: true,
-              clockFace: 'MinuteCounter'
-            });
+            var timeRemaining = obj['endTime'] - startTime;
+            addClock(timeRemaining);
           }
         } else {
-          setObject('end_time', end_time);
-          var clock = $('.your-clock').FlipClock(300, {
-            countdown: true,
-            clockFace: 'MinuteCounter'
-          });
+          setObject('endTime', endTime);
+          addClock(breakTime);
           console.log("Set new timer");
         }
       });
 
-      // if (storage.get(['end_time']) || storage.get(['end_time']) < start_time) {
-      //   var end_time = start_time + 300000;
-      //   storage.set(obj['end_time'] = end_time);
+      // if (storage.get(['endTime']) || storage.get(['endTime']) < startTime) {
+      //   var endTime = startTime + 300000;
+      //   storage.set(obj['endTime'] = endTime);
       // }
 
-      // var timeRemaining = ((storage.get('end_time') - start_time)/1000) || 300;
+      // var timeRemaining = ((storage.get('endTime') - startTime)/1000) || 300;
 
     }
   }
