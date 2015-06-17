@@ -69,33 +69,6 @@
 // getCurrentTabUrl();
 console.log("hello i am part of the extension");
 
-function intervalTime(mins, callback) {
-  var msecPerMinute = 1000 * 60;
-
-  var startTime = new Date().getTime();
-  var minutes = mins * msecPerMinute;
-  var endTime = startTime + minutes;
-
-  callback();
-  var myInterval = setInterval(function() {
-    if (new Date().getTime() > endTime) {
-      console.log("now ready");
-      clearInterval(myInterval);
-    } else {
-      console.log("not yet function");
-    }
-  }, 5000);
-}
-
-
-function injectScript(tabID) {
-  console.log("Inject Script accessed");
-  // chrome.tabs.executeScript(null, {file: "script.js"});
-  // chrome.tabs.executeScript(tabID, {
-  //   code: 'document.body.style.backgroundColor="red"'
-  // });
-}
-
 chrome.webNavigation.onCompleted.addListener(function(info) {
   console.log("URL is: " + info.url);
   chrome.tabs.query({lastFocusedWindow: true}, function(tabs) {
