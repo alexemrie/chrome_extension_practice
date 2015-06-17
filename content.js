@@ -4,14 +4,59 @@ chrome.runtime.onMessage.addListener(
       console.log("message recieved");
       if ($("#timer").length == 0) {
         console.log("Adding Timer");
-        $('p').css('background-color', 'green');
+        $('p').css('background-color', 'black');
         $('body').append('<div id="timer" class="your-clock"></div>');
-
-        var clock = $('.your-clock').FlipClock(10, {
-		      countdown: true,
-		      clockFace: 'MinuteCounter'
-	      });
       }
+
+      function setObject(name, value, callback) {
+        var obj = {};
+        obj[name] = value;
+        console.log("set object properties and values");
+        chrome.storage.local.set(obj, function() {
+          if (callback) callback();
+        });
+      }
+
+      function hasKey(obj, prop) {
+        if (obj.hasOwnProperty(prop)) {
+          return true;
+        }
+        return false;
+      }
+
+
+      chrome.storage.local.get(null, function(obj) {
+        var start_time = (new Date().getTime())/1000;
+        var end_time = start_time + 300;
+        if (hasKey(obj, 'end_time')) {
+          if (obj['end_time'] < start_time) {
+            console.log("Past prior deadline");
+            chrome.storage.local.remove('end_time');
+          } else {
+            console.log("still active");
+            var timeRemaining = obj['end_time'] - start_time;
+            var clock = $('.your-clock').FlipClock(timeRemaining, {
+              countdown: true,
+              clockFace: 'MinuteCounter'
+            });
+          }
+        } else {
+          setObject('end_time', end_time);
+          var clock = $('.your-clock').FlipClock(300, {
+            countdown: true,
+            clockFace: 'MinuteCounter'
+          });
+          console.log("Set new timer");
+        }
+      });
+
+      // if (storage.get(['end_time']) || storage.get(['end_time']) < start_time) {
+      //   var end_time = start_time + 300000;
+      //   storage.set(obj['end_time'] = end_time);
+      // }
+
+      // var timeRemaining = ((storage.get('end_time') - start_time)/1000) || 300;
+
     }
   }
 );
