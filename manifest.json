@@ -11,10 +11,11 @@
   "background": {
     "scripts": ["background.js"]
   },
+  "options_page": "options.html",
   "content_scripts": [{
     "matches": [ "<all_urls>" ],
     "js": [ "jquery-2.1.4.min.js", "content.js"],
-    "css": ["timer.css", "block.css", "popup.js"]
+    "css": ["timer.css", "block.css", "options.css"]
   }],
   "permissions": [
     "activeTab",

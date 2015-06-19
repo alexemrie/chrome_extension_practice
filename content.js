@@ -1,3 +1,26 @@
+function setObject(name, value, callback) {
+  var obj = {};
+  obj[name] = value;
+  console.log("set object properties and values");
+  chrome.storage.local.set(obj, function() {
+    if (callback) callback();
+  });
+}
+
+function hasKey(obj, prop) {
+  if (obj.hasOwnProperty(prop)) {
+    return true;
+  }
+  return false;
+}
+
+function addClock(timeRemaining) {
+  $('.your-clock').FlipClock(timeRemaining, {
+    countdown: true,
+    clockFace: 'MinuteCounter'
+  });
+}
+
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.message === "visited monitored url") {
@@ -6,29 +29,6 @@ chrome.runtime.onMessage.addListener(
         console.log("Adding Timer");
         $('p').css('background-color', 'black');
         $('body').append('<div id="timer" class="your-clock"></div>');
-      }
-
-      function setObject(name, value, callback) {
-        var obj = {};
-        obj[name] = value;
-        console.log("set object properties and values");
-        chrome.storage.local.set(obj, function() {
-          if (callback) callback();
-        });
-      }
-
-      function hasKey(obj, prop) {
-        if (obj.hasOwnProperty(prop)) {
-          return true;
-        }
-        return false;
-      }
-
-      function addClock(timeRemaining) {
-        $('.your-clock').FlipClock(timeRemaining, {
-          countdown: true,
-          clockFace: 'MinuteCounter'
-        });
       }
 
       chrome.storage.local.get(null, function(obj) {
@@ -60,14 +60,6 @@ chrome.runtime.onMessage.addListener(
           console.log("Set new timer");
         }
       });
-
-      // if (storage.get(['endTime']) || storage.get(['endTime']) < startTime) {
-      //   var endTime = startTime + 300000;
-      //   storage.set(obj['endTime'] = endTime);
-      // }
-
-      // var timeRemaining = ((storage.get('endTime') - startTime)/1000) || 300;
-
     }
   }
 );

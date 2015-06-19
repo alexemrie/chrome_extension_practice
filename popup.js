@@ -7,5 +7,9 @@ $(document).ready(function(){
       $("#statusDetail").html('Study Mode Disabled');
     }
   });
+  $(".optsSettings").on("click", function() {
+    chrome.runtime.openOptionsPage();
+  });
+
   console.log("Accessed popup js");
 })
