@@ -2,9 +2,7 @@ function setObject(name, value, callback) {
   var obj = {};
   obj[name] = value;
   console.log("set object properties and values");
-  chrome.storage.local.set(obj, function() {
-    if (callback) callback();
-  });
+  chrome.storage.local.set(obj);
 }
 
 function hasKey(obj, prop) {
@@ -27,15 +25,14 @@ chrome.runtime.onMessage.addListener(
       console.log("message recieved");
       if ($("#timer").length == 0) {
         console.log("Adding Timer");
-        $('p').css('background-color', 'black');
         $('body').append('<div id="timer" class="your-clock"></div>');
       }
 
       chrome.storage.local.get(null, function(obj) {
-        var startTime = (new Date().getTime())/1000;
-        var breakTime = 15
+        var startTime = (new Date().getTime())/(1000);        
+        var breakTime = Number(obj["break"]) * 60;
         var endTime = startTime + breakTime;
-        var studyTime = 20;
+        var studyTime = Number(obj["study"]) * 60;
         if (hasKey(obj, 'endTime')) {
           if (obj['endTime'] < startTime) {
             if ((obj['endTime'] + studyTime) > startTime) {
