@@ -1,6 +1,6 @@
 $(document).ready(function(){
   chrome.storage.local.get(null, function(items) {
-    document.getElementById('statusDetail').innerHTML = items["status"];
+    document.getElementById('statusDetail').innerHTML = (items["status"] || "Study Mode Disabled");
   });
 
   document.getElementById('header').addEventListener('click', function() {
@@ -11,13 +11,10 @@ $(document).ready(function(){
         "active": true
       });
     } else {
-      chrome.storage.local.set({
-        "status": "Study Mode Disabled",
-        "active": false
-      })
+      chrome.storage.local.remove(["status", "active", "endTime"]);      
     }
     chrome.storage.local.get(null, function(items) {
-      document.getElementById('statusDetail').innerHTML = items["status"];
+      document.getElementById('statusDetail').innerHTML = (items["status"] || "Study Mode Disabled");
     });
   });
 
