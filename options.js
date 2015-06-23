@@ -2,9 +2,13 @@ function save_options() {
   var studyTime = document.getElementById('studyInterval').value;
   var breakTime = document.getElementById('breakInterval').value;
   // var likesColor = document.getElementById('like').checked;
+  var facebook = document.getElementById('facebook').checked;
+  var twitter = document.getElementById('twitter').checked;
   chrome.storage.local.set({
     "study": studyTime,
-    "break": breakTime
+    "break": breakTime,
+    "facebook": facebook,
+    "twitter": twitter
   }, function() {
     chrome.storage.local.remove('endTime');
     close_tab();
@@ -14,10 +18,14 @@ function save_options() {
 function restore_options() {
   chrome.storage.local.get({
     "study": '30',
-    "break": '10'
+    "break": '10',
+    "facebook": true,
+    "twitter": true
   }, function(items) {
     document.getElementById('studyInterval').value = items["study"];
     document.getElementById('breakInterval').value = items["break"];
+    document.getElementById('facebook').checked = items["facebook"];
+    document.getElementById('twitter').checked = items["twitter"];
   });
 }
 

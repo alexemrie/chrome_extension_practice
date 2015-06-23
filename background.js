@@ -7,12 +7,12 @@ chrome.webNavigation.onCompleted.addListener(function(info) {
 
   chrome.storage.local.get(null, function(items) {
     if (items['active']) {
-      if (currentTabURL.search("reddit") || currentTabURL.search("facebook") || currentTabURL.search("twitter")> -1) {
+      if (((currentTabURL.search("facebook")>-1) && items["facebook"]) || ((currentTabURL.search("twitter")>-1) && items["twitter"])) {
         chrome.tabs.sendMessage(currentTabId, {"message": "visited monitored url"});
       }
     }
   })
-}, {url: [{hostContains : 'www.reddit.com'}, {hostContains : 'www.facebook.com'}, {hostContains : 'twitter.com'}]});
+}, {url: [{urlEquals : 'https://www.facebook.com/'}, {urlEquals : 'https://twitter.com/'}]});
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {

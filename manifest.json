@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "Procrastinate No More",
-  "description": "Are you really studying?",
+  "name": "Study Buddy",
+  "description": "Study Enhancement Tool",
   "version": "1.0",
   "browser_action": {
     "default_icon": "icon.png",
@@ -15,7 +15,7 @@
   "content_scripts": [{
     "matches": [ "<all_urls>" ],
     "js": [ "jquery-2.1.4.min.js", "content.js"],
-    "css": ["timer.css", "block.css", "options.css"]
+    "css": ["timer.css"]
   }],
   "permissions": [
     "activeTab",
