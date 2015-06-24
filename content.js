@@ -29,10 +29,11 @@ chrome.runtime.onMessage.addListener(
       }
 
       chrome.storage.local.get(null, function(obj) {
-        var startTime = (new Date().getTime())/(1000);        
+        var startTime = (new Date().getTime())/(1000);
         var breakTime = Number(obj["break"]) * 60;
         var endTime = startTime + breakTime;
         var studyTime = Number(obj["study"]) * 60;
+
         if (hasKey(obj, 'endTime')) {
           if (obj['endTime'] < startTime) {
             if ((obj['endTime'] + studyTime) > startTime) {
@@ -61,6 +62,19 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
+setInterval(function redirectPage(){
+  if ($("#timer").length > 0) {
+    chrome.storage.local.get(null, function(obj) {
+      var timeNow = (new Date().getTime())/(1000);
+      if (obj['endTime'] < timeNow) {
+        console.log("Need to render block page here");
+        chrome.runtime.sendMessage({blockHTML: "Block This Page"}, function(response) {
+          console.log(response.success);
+        });          
+      }
+    });
+  }
+}, 1000)
 
 var Base = function() {
 	// dummy
