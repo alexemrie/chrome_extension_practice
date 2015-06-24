@@ -62,7 +62,7 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
-setInterval(function redirectPage(){
+var renderBlockPageInterval = setInterval(function redirectPage(){
   if ($("#timer").length > 0) {
     chrome.storage.local.get(null, function(obj) {
       var timeNow = (new Date().getTime())/(1000);
@@ -70,11 +70,26 @@ setInterval(function redirectPage(){
         console.log("Need to render block page here");
         chrome.runtime.sendMessage({blockHTML: "Block This Page"}, function(response) {
           console.log(response.success);
-        });          
+          clearInterval(renderBlockPageInterval);
+        });
       }
     });
   }
-}, 1000)
+}, 1000);
+
+var blockTimeInterval = setInterval(function addBlockTimer() {
+  if ($("#blockTimer").length > 0) {
+    chrome.storage.local.get(null, function(obj) {
+      console.log("Block timer should be added");
+      var startTime = (new Date().getTime())/(1000);
+      var studyTime = Number(obj["study"]) * 60;
+      var startStudy = obj['endTime'];
+      var studyTimeRemaining = (studyTime + startStudy) - startTime;      
+      addClock(studyTimeRemaining);
+      clearInterval(blockTimeInterval);
+    });
+  }
+}, 500);
 
 var Base = function() {
 	// dummy

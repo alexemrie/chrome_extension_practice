@@ -44,7 +44,6 @@ div#wrapper {
 	top: 60px;
 
 }
-/*you can programmatically set the colors or even background images of these here */
 div#wrapper, .smiley div {
 	background-color: #c00;
 }
