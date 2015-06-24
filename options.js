@@ -1,14 +1,14 @@
 function save_options() {
   var studyTime = document.getElementById('studyInterval').value;
   var breakTime = document.getElementById('breakInterval').value;
-  // var likesColor = document.getElementById('like').checked;
   var facebook = document.getElementById('facebook').checked;
   var twitter = document.getElementById('twitter').checked;
+  var status = document.getElementById('status').checked;
   chrome.storage.local.set({
     "study": studyTime,
     "break": breakTime,
     "facebook": facebook,
-    "twitter": twitter
+    "twitter": twitter    
   }, function() {
     chrome.storage.local.remove('endTime');
     close_tab();
