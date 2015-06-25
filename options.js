@@ -27,12 +27,12 @@ function restore_options() {
   chrome.storage.local.get({
     "study": '30',
     "break": '10',
-    "facebook": true,
-    "instagram": true,
-    "pinterest": true,
-    "reddit": true,
-    "twitter": true,
-    "youtube": true
+    "facebook": false,
+    "instagram": false,
+    "pinterest": false,
+    "reddit": false,
+    "twitter": false,
+    "youtube": false
   }, function(items) {
     document.getElementById('studyInterval').value = items["study"];
     document.getElementById('breakInterval').value = items["break"];
