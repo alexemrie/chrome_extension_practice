@@ -1,7 +1,6 @@
 function setObject(name, value, callback) {
   var obj = {};
   obj[name] = value;
-  console.log("set object properties and values");
   chrome.storage.local.set(obj);
 }
 
@@ -22,9 +21,7 @@ function addClock(timeRemaining) {
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.message === "visited monitored url") {
-      console.log("message recieved");
       if ($("#timer").length == 0) {
-        console.log("Adding Timer");
         $('body').append('<div id="timer" class="your-clock"></div>');
       }
 
@@ -37,25 +34,20 @@ chrome.runtime.onMessage.addListener(
         if (hasKey(obj, 'endTime')) {
           if (obj['endTime'] < startTime) {
             if ((obj['endTime'] + studyTime) > startTime) {
-              console.log("Need to render block html page");
               chrome.runtime.sendMessage({blockHTML: "Block This Page"}, function(response) {
-                console.log(response.success);
               });
             } else {
-              console.log("Removing end time object and starting new timer")
               chrome.storage.local.remove('endTime');
               setObject('endTime', endTime);
               addClock(breakTime);
             }
           } else {
-            console.log("still active");
             var timeRemaining = obj['endTime'] - startTime;
             addClock(timeRemaining);
           }
         } else {
           setObject('endTime', endTime);
           addClock(breakTime);
-          console.log("Set new timer");
         }
       });
     }
@@ -67,9 +59,7 @@ var renderBlockPageInterval = setInterval(function redirectPage(){
     chrome.storage.local.get(null, function(obj) {
       var timeNow = (new Date().getTime())/(1000);
       if (obj['endTime'] < timeNow) {
-        console.log("Need to render block page here");
         chrome.runtime.sendMessage({blockHTML: "Block This Page"}, function(response) {
-          console.log(response.success);
           clearInterval(renderBlockPageInterval);
         });
       }
@@ -80,11 +70,10 @@ var renderBlockPageInterval = setInterval(function redirectPage(){
 var blockTimeInterval = setInterval(function addBlockTimer() {
   if ($("#blockTimer").length > 0) {
     chrome.storage.local.get(null, function(obj) {
-      console.log("Block timer should be added");
       var startTime = (new Date().getTime())/(1000);
       var studyTime = Number(obj["study"]) * 60;
       var startStudy = obj['endTime'];
-      var studyTimeRemaining = (studyTime + startStudy) - startTime;      
+      var studyTimeRemaining = (studyTime + startStudy) - startTime;
       addClock(studyTimeRemaining);
       clearInterval(blockTimeInterval);
     });
