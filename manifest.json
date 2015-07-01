@@ -1,6 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "Study Buddy",
+  "name": "Study Buddy Procrastination Helper",
+  "short_name": "Study Buddy",
   "description": "Study Enhancement Tool",
   "version": "1.0",
   "browser_action": {
