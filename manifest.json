@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Study Buddy Procrastination Helper",
   "short_name": "Study Buddy",
-  "description": "Study Enhancement Tool",
+  "description": "Study Enhancement Tool. Improve time management by limiting access to social media over customizable time intervals.",
   "version": "1.1",
   "browser_action": {
     "default_icon": "StudyBuddy.png",
